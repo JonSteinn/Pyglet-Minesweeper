@@ -4,8 +4,8 @@ matrix:
   include:
     - python: 3.7
     - python: 3.8
-    dist: bionic
-    sudo: true
+  dist: bionic
+  sudo: true
 
 install:
   - pip install pipenv
