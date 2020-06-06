@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\jonst\\.virtualenvs\\minesweeper-eJjnRpSV\\Scripts\\python.exe"
+    "python.pythonPath": "C:\\Users\\jonst\\.virtualenvs\\minesweeper-eJjnRpSV\\Scripts\\python.exe",
+    "python.autoComplete.extraPaths": [
+    ]
 }

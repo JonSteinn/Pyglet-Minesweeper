@@ -1,7 +1,7 @@
 """Geometric shapes to draw.
 """
 
-from typing import Tuple
+from typing import Tuple, List
 import pyglet
 
 class AlphaColors:
@@ -50,36 +50,83 @@ class AlphaColors:
         return AlphaColors.COLOR_MAP[token]
 
 class Rectangle:
+    """A rectangle drawing, possibl containing a centered label.
+    """
+
     RECT_GL_COL = [128]*12
     RECT_GL_COL2 = [75]*12
+    BOMB_TOKEN = '?'
+    FONT_SIZE = 15
 
-    def __init__(self, x, y, w, h):
-        self.x = x
-        self.y = y
-        self.w = w
-        self.h = h
-        self.v = self.as_vertices()
-        cx, cy = self.center()
-        self.label = pyglet.text.Label(
-            '0', font_size=15, x=cx, y=cy, font_name='Impact',
+    def __init__(self, x: int, y: int, w: int, h: int) -> None:
+        """Create an instance of a drawable rectangle.
+
+        Args:
+            x (int): x coordinate of the lower left corner.
+            y (int): y coordinate of the lower lef corner.
+            w (int): width of the rectangle.
+            h (int): height of the rectangle.
+        """
+        self.vertices: List[int] = self.as_vertices(x, y, w, h)
+        c_x, c_y = self.center(x, y, w, h)
+        self.label: pyglet.text.Label = pyglet.text.Label(
+            '0', font_size=Rectangle.FONT_SIZE, x=c_x, y=c_y, font_name='Impact',
             anchor_x='center', anchor_y='center', color=AlphaColors.WHITE)
 
-    def as_vertices(self):
+    def as_vertices(self, x: int, y: int, w: int, h: int) -> List[int]:
+        """Create list of corner vertices of rectangle.
+
+        Args:
+            x (int): x coordinate of the lower left corner.
+            y (int): y coordinate of the lower lef corner.
+            w (int): width of the rectangle.
+            h (int): height of the rectangle.
+
+        Returns:
+            List[int]: The list of vertices in gl quad format.
+        """
         return [
-            self.x, self.y,
-            self.x + self.w, self.y,
-            self.x + self.w, self.y + self.h,
-            self.x, self.y + self.h
+            x, y,
+            x + w, y,
+            x + w, y + h,
+            x, y + h
         ]
 
-    def center(self):
-        return (2*self.x + self.w)//2, (2*self.y + self.h)//2
+    def center(self, x: int, y: int, w: int, h: int) -> Tuple[int, int]:
+        """Find the center of the rectangle.
 
-    def set_label(self, val):
-        self.label.text = val
-        self.label.color = AlphaColors.get_color_for_adj(val)
+        Args:
+            x (int): x coordinate of the lower left corner.
+            y (int): y coordinate of the lower lef corner.
+            w (int): width of the rectangle.
+            h (int): height of the rectangle.
 
-    def draw(self, render_text):
-        pyglet.graphics.draw(4, pyglet.gl.GL_QUADS, ('v2f', self.v), ('c3B', Rectangle.RECT_GL_COL if render_text and self.label.text != '?' else Rectangle.RECT_GL_COL2))
+        Returns:
+            Tuple[int, int]: The center point of the rectangle.
+        """
+        return (2*x + w)//2, (2*y + h)//2
+
+    def set_label(self, token: str) -> None:
+        """Set the label of a square.
+
+        Args:
+            token (str): The label token for a square.
+        """
+        self.label.text = token
+        self.label.color = AlphaColors.get_color_for_adj(token)
+
+    def draw(self, render_text: bool) -> None:
+        """Draw the rectangle. Rectangles with a visible token
+        get a different base color.
+
+        Args:
+            render_text (bool): Should the label be drawn?
+        """
+        if render_text and self.label.text != Rectangle.BOMB_TOKEN:
+            color = Rectangle.RECT_GL_COL
+        else:
+            color = Rectangle.RECT_GL_COL2
+        pyglet.graphics.draw(
+            4, pyglet.gl.GL_QUADS, ('v2f', self.vertices), ('c3B', color))
         if render_text:
             self.label.draw()

@@ -1,18 +1,54 @@
-import pyglet
-from shapes import Rectangle
+"""The main file that contains the pyglet.
+"""
+
+from shapes import Rectangle, AlphaColors
 from game import Minesweeper
+import pyglet
 
 class Application(pyglet.window.Window):
+    RECT_LEN = 40
+    BORDER = 1
+
+    TOP_SIZE = 50
+    TOP_FONT_SIZE = 15
+    TOP_H_OFFSET = 8
+    TOP_V_OFFSET = -25
+
+    WIDTH = Minesweeper.COL_SIZE * RECT_LEN
+    HEIGHT = Minesweeper.ROW_SIZE * RECT_LEN + TOP_SIZE
 
     def __init__(self, *args, **kargs):
-        super().__init__(*args, **kargs)
+        super().__init__(Application.WIDTH, Application.HEIGHT, *args, **kargs)
         self.game = None
-        self.rects = [[Rectangle(1+40*r, 1+40*c, 38, 38) for c in range(16)] for r in range(16)]
+        self.rects = [
+            [
+                Rectangle(
+                    Application.BORDER + Application.RECT_LEN * r,
+                    Application.BORDER + Application.RECT_LEN * c,
+                    Application.RECT_LEN - 2 * Application.BORDER,
+                    Application.RECT_LEN - 2 * Application.BORDER
+                ) for c in range(Minesweeper.COL_SIZE)
+            ] for r in range(Minesweeper.ROW_SIZE)
+        ]
         self.label = pyglet.text.Label(
-            "32", font_size=15,
-            x=320+8, y=640+8+25, font_name='Impact', anchor_x='center', anchor_y='center', color = (255,0,0,255))
+            "X", font_size=Application.TOP_FONT_SIZE,
+            x=Application.WIDTH//2 + Application.TOP_H_OFFSET,
+            y=Application.HEIGHT + Application.TOP_V_OFFSET,
+            font_name='Impact', anchor_x='center',
+            anchor_y='center', color = AlphaColors.RED
+        )
 
-    def on_draw(self):
+    def center_window(self) -> None:
+        """Place this window centrally on the display.
+        """
+        screen = pyglet.canvas.Display().get_default_screen()
+        c_x = screen.width // 2 - self.width // 2
+        c_y = screen.height // 2 - self.height // 2
+        self.set_location(c_x, c_y)
+
+    def on_draw(self) -> None:
+        """Redraw everything.
+        """
         self.clear()
 
         if self.game is None:
@@ -36,23 +72,23 @@ class Application(pyglet.window.Window):
             self.label.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
-        c = y//40
-        r = x//40
-        if r < 16 and c < 16:
+        _x, _y = x//Application.RECT_LEN, y//Application.RECT_LEN
+        if _x < Minesweeper.ROW_SIZE and _y < Minesweeper.COL_SIZE:
             if self.game is None:
-                self.game = Minesweeper(r,c)
+                self.game = Minesweeper(_x, _y)
             elif not self.game.is_over():
                 if button == pyglet.window.mouse.LEFT:
-                    self.game.left_click(r,c)
+                    self.game.left_click(_x, _y)
                 elif button == pyglet.window.mouse.RIGHT:
-                    self.game.right_click(r,c)
+                    self.game.right_click(_x, _y)
         else:
             self.game = None
 
 def main():
-    screen = pyglet.canvas.Display().get_default_screen()
-    app = Application(640,640+50,"Minesweeper",resizable=False)
-    app.set_location(screen.width // 2 - app.width // 2, screen.height // 2 - app.height // 2)
+    """Starting point.
+    """
+    app = Application("Minesweeper", resizable=False)
+    app.center_window()
     pyglet.app.run()
 
 if __name__ == "__main__":
