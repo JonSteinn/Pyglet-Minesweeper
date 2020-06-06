@@ -1,10 +1,33 @@
 {
     "python.pythonPath": "C:/Users/jonst/.virtualenvs/minesweeper-eJjnRpSV/Scripts/python.exe",
-
-    "python.autoComplete.extraPaths": [
-      "${workspaceFolder}/minesweeper"
-    ],
-
     "python.linting.pylintPath": "C:/Users/jonst/.virtualenvs/minesweeper-eJjnRpSV/Scripts/pylint.exe",
-    "python.linting.pylintEnabled": true
+    "python.linting.flake8Path": "C:/Users/jonst/.virtualenvs/minesweeper-eJjnRpSV/Scripts/flake8.exe",
+
+    "python.linting.pylintEnabled": true,
+    "python.linting.flake8Enabled": true,
+
+    "files.exclude": {
+      ".pytest_cache": true,
+
+      "Pipfile.lock": true,
+      "Pipfile": true,
+
+      ".pylintrc": true,
+      ".flake8": true,
+      ".editorconfig": true,
+      ".gitattribute": true,
+      ".gitignore": true,
+      ".travis.yml": true,
+
+      "LICENSE": true,
+      "README.md": true,
+
+      "**/.git": true,
+      "**/.svn": true,
+      "**/.hg": true,
+      "**/CVS": true,
+      "**/.DS_Store": true,
+      "**/*.pyc": true,
+      "**/__pycache__": true
+    }
 }

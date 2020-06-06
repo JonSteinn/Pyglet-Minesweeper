@@ -4,6 +4,7 @@
 from random import uniform
 from typing import List, Iterator, Tuple
 
+
 class MinesweeperSquare:
     """A single square on the minesweeper board.
     """
@@ -13,8 +14,8 @@ class MinesweeperSquare:
         """Create an instance of a Minesweeper square, the state of each square.
 
         Args:
-            adjacency_count (int, optional): How many of the neighboring squares
-            are bombs. Defaults to 0.
+            adjacency_count (int, optional): How many of the neighboring
+            squares are bombs. Defaults to 0.
             flipped (bool, optional): Has this square been revealed by the player.
             Defaults to False.
             marked (bool, optional): Is this square currently marked as a bomb by
@@ -82,17 +83,20 @@ class MinesweeperSquare:
         """
         return self.marked
 
+
 class Minesweeper:
     """The actual game to be played. It supports two operations, left nad
     right clicking and the state of the game can also be checked.
     """
 
+    N_OFFSET = ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1))
+
     # The number of rows
-    ROW_SIZE: int = 16
+    ROW_SIZE = 16
     # The number of columns
-    COL_SIZE: int = 16
+    COL_SIZE = 16
     # The number of bombs
-    TOTAL_BOMBS: int = 40
+    TOTAL_BOMBS = 40
     # Enum for game states
     WON, LOST, ONGOING = range(3)
 
@@ -188,9 +192,9 @@ class Minesweeper:
         Yields:
             (int,int): The row-col coordinate of a neighbor.
         """
-        for _r, _c in ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
+        for _r, _c in Minesweeper.N_OFFSET:
             if 0 <= r + _r < Minesweeper.ROW_SIZE and \
-                0 <= c + _c < Minesweeper.COL_SIZE:
+               0 <= c + _c < Minesweeper.COL_SIZE:
                 yield r+_r, c+_c
 
     def _generate(self, r: int, c: int) -> None:

@@ -4,6 +4,7 @@
 from typing import Tuple, List
 import pyglet
 
+
 class AlphaColors:
     """A static collection of color constants
     """
@@ -48,6 +49,7 @@ class AlphaColors:
             Tuple[int, int, int, int]: rgba color value.
         """
         return AlphaColors.COLOR_MAP[token]
+
 
 class Rectangle:
     """A rectangle drawing, possibl containing a centered label.

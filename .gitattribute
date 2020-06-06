@@ -1,8 +1,13 @@
 * text=auto
 
 AUTHORS         text    eol=lf
+LICENSE         text    eol=lf
+README.md       text    eol=lf
+Pipfile         text    eol=lf
+Pipfile.lock    text    eol=lf
 .editorconfig   text    eol=lf
-.eslintignore   text    eol=lf
+.travis.yml     text    eol=lf
+.pylintrc       text    eol=lf
 .gitignore      text    eol=lf
 .gitattribute   text    eol=lf
 *.sh            text    eol=lf

@@ -5,7 +5,10 @@ import pyglet
 from shapes import Rectangle, AlphaColors
 from game import Minesweeper
 
+
 class Application(pyglet.window.Window):
+    """Inhertis a pyglet window object and store all game objects.
+    """
     RECT_LEN = 40
     BORDER = 1
 
@@ -37,7 +40,7 @@ class Application(pyglet.window.Window):
             x=Application.WIDTH//2 + Application.TOP_H_OFFSET,
             y=Application.HEIGHT + Application.TOP_V_OFFSET,
             font_name='Impact', anchor_x='center',
-            anchor_y='center', color = AlphaColors.RED
+            anchor_y='center', color=AlphaColors.RED
         )
 
     def center_window(self) -> None:
@@ -94,12 +97,14 @@ class Application(pyglet.window.Window):
         else:
             self.game = None
 
+
 def main() -> None:
     """Starting point.
     """
     app = Application("Minesweeper", resizable=False)
     app.center_window()
     pyglet.app.run()
+
 
 if __name__ == "__main__":
     main()
