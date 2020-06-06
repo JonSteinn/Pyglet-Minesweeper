@@ -1,6 +1,13 @@
+"""Geometric shapes to draw.
+"""
+
+from typing import Tuple
 import pyglet
 
 class AlphaColors:
+    """A static collection of color constants
+    """
+
     GREEN = (0, 255, 0, 255)
     RED = (255, 0, 0, 255)
     BLUE = (0, 0, 255, 255)
@@ -31,8 +38,16 @@ class AlphaColors:
     }
 
     @staticmethod
-    def get_color_for_adj(char):
-        return AlphaColors.COLOR_MAP[char]
+    def get_color_for_adj(token: str) -> Tuple[int, int, int, int]:
+        """Fetch the color chosen for a specific token.
+
+        Args:
+            token (str): The token to match with a color.
+
+        Returns:
+            Tuple[int, int, int, int]: rgba color value.
+        """
+        return AlphaColors.COLOR_MAP[token]
 
 class Rectangle:
     RECT_GL_COL = [128]*12
