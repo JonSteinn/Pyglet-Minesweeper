@@ -2,6 +2,7 @@
 """
 
 from random import uniform
+from typing import List, Iterator, Tuple
 
 class MinesweeperSquare:
     """A single square on the minesweeper board.
@@ -93,31 +94,66 @@ class Minesweeper:
     # The number of bombs
     TOTAL_BOMBS: int = 40
     # Enum for game states
-    WON, LOST, ONGOING = range(3) # TYPING ?
+    WON, LOST, ONGOING = range(3)
 
     def __init__(self, r: int, c: int) -> None:
-        self.mat = [
+        """Create an instance of a minesweeper game and generate the bombs
+        so that (r,c) won't have one, then simulate (r,c) being left clicked.
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+        """
+        self.mat: List[List[MinesweeperSquare]] = [
             [MinesweeperSquare() for _ in range(Minesweeper.COL_SIZE)]
-                for _ in range(Minesweeper.ROW_SIZE)
+            for _ in range(Minesweeper.ROW_SIZE)
         ]
+        self.unflipped = Minesweeper.ROW_SIZE * Minesweeper.COL_SIZE
         self._generate(r, c)
-        self.state = Minesweeper.ONGOING
-        self.bombs_rem = Minesweeper.TOTAL_BOMBS
-        self.left_click(r,c)
+        self.state: int = Minesweeper.ONGOING
+        self.bombs_rem: int = Minesweeper.TOTAL_BOMBS
+        self.left_click(r, c)
 
     def left_click(self, r: int, c: int) -> bool:
+        """Left click to reveal a square.
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+
+        Returns:
+            bool: True if any change was made.
+        """
+
+        if self.state != Minesweeper.ONGOING:
+            return False
+
         if self.mat[r][c].is_visible():
-            return True
+            return False
+
         self.mat[r][c].flip()
+        self.unflipped -= 1
+
         if self.mat[r][c].is_bomb():
             self.state = Minesweeper.LOST
-            return False
-        if self.mat[r][c].adjacent_bombs == 0:
-            self._dfs_traverse(r,c)
+            return True
+
+        if self.mat[r][c].adjacent_bombs() == 0:
+            self._dfs_traverse(r, c)
+
+        if self.unflipped == 0:
+            self.state = Minesweeper.WON
 
         return True
 
     def right_click(self, r: int, c: int) -> None:
+        """Place a mark to indicate that a bomb is believed to be
+        present at this place.
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+        """
         if not self.mat[r][c].is_visible():
             if self.mat[r][c].is_marked():
                 self.bombs_rem += 1
@@ -127,20 +163,46 @@ class Minesweeper:
                 self.mat[r][c].mark()
 
     def is_over(self) -> bool:
+        """Check if game is over.
+
+        Returns:
+            bool: True iff won or lost.
+        """
         return self.state != Minesweeper.ONGOING
 
     def is_won(self) -> bool:
+        """Check if game is won.
+
+        Returns:
+            bool: True iff won.
+        """
         return self.state == Minesweeper.WON
 
-    def _neighbors(self, r: int, c: int):
-        for _r, _c in zip((-1, 0, 1), (-1, 0, 1)):
-            if (_r or _c) and 0 <= r + _r < Minesweeper.ROW_SIZE and 0 <= c + _c < Minesweeper.COL_SIZE:
+    def _neighbors(self, r: int, c: int) -> Iterator[Tuple[int, int]]:
+        """Generate all adjacent positions of (r,c).
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+
+        Yields:
+            (int,int): The row-col coordinate of a neighbor.
+        """
+        for _r, _c in ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)):
+            if 0 <= r + _r < Minesweeper.ROW_SIZE and \
+                0 <= c + _c < Minesweeper.COL_SIZE:
                 yield r+_r, c+_c
 
-    def _generate(self, r: int, c: int):
+    def _generate(self, r: int, c: int) -> None:
+        """Randomly generate the board so that (r,c) does not
+        contain a bomb and that bomb count is reached.
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+        """
         cnt = 0
-        print(self.mat[r][c].is_bomb())
-        while cnt < 40:
+        while cnt < Minesweeper.TOTAL_BOMBS:
             _r = int(uniform(0, Minesweeper.ROW_SIZE))
             _c = int(uniform(0, Minesweeper.COL_SIZE))
             if (_r == r and _c == c) or self.mat[_r][_c].is_bomb():
@@ -148,9 +210,17 @@ class Minesweeper:
             cnt += 1
             self.mat[_r][_c].make_bomb()
             for n_r, n_c in self._neighbors(_r, _c):
-                self.mat[n_r][n_c].increment_adjacency_count()
+                if not self.mat[n_r][n_c].is_bomb():
+                    self.mat[n_r][n_c].increment_adjacency_count()
 
-    def _dfs_traverse(self, r: int, c: int):
+    def _dfs_traverse(self, r: int, c: int) -> None:
+        """Traverse the board of no-neighbor-squares and flip
+        all in its path.
+
+        Args:
+            r (int): The row of the click.
+            c (int): The column of the click.
+        """
         stack = [(r, c)]
         while stack:
             c_r, c_c = stack.pop()
