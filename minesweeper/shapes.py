@@ -69,13 +69,14 @@ class Rectangle:
             w (int): width of the rectangle.
             h (int): height of the rectangle.
         """
-        self.vertices: List[int] = self.as_vertices(x, y, w, h)
-        c_x, c_y = self.center(x, y, w, h)
+        self.vertices: List[int] = Rectangle.as_vertices(x, y, w, h)
+        c_x, c_y = Rectangle.center(x, y, w, h)
         self.label: pyglet.text.Label = pyglet.text.Label(
             '0', font_size=Rectangle.FONT_SIZE, x=c_x, y=c_y, font_name='Impact',
             anchor_x='center', anchor_y='center', color=AlphaColors.WHITE)
 
-    def as_vertices(self, x: int, y: int, w: int, h: int) -> List[int]:
+    @staticmethod
+    def as_vertices(x: int, y: int, w: int, h: int) -> List[int]:
         """Create list of corner vertices of rectangle.
 
         Args:
@@ -94,7 +95,8 @@ class Rectangle:
             x, y + h
         ]
 
-    def center(self, x: int, y: int, w: int, h: int) -> Tuple[int, int]:
+    @staticmethod
+    def center(x: int, y: int, w: int, h: int) -> Tuple[int, int]:
         """Find the center of the rectangle.
 
         Args:

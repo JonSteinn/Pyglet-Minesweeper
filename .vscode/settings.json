@@ -12,12 +12,12 @@
       "Pipfile.lock": true,
       "Pipfile": true,
 
-      ".pylintrc": true,
+      ".pylintrc": false,
       ".flake8": true,
       ".editorconfig": true,
       ".gitattribute": true,
       ".gitignore": true,
-      ".travis.yml": true,
+      ".travis.yml": false,
 
       "LICENSE": true,
       "README.md": true,

@@ -66,7 +66,7 @@ def test_ms_init_empty():
         ms = Minesweeper(r,c)
         if ms.mat[r][c].adjacent_bombs() == 0:
             break
-    for n_r, n_c in ms._neighbors(r, c):
+    for n_r, n_c in Minesweeper._neighbors(r, c):
         assert not ms.mat[n_r][n_c].is_bomb()
 
     for _r in range(Minesweeper.ROW_SIZE):
@@ -81,7 +81,7 @@ def test_ms_init_adjacent():
         if ms.mat[r][c].adjacent_bombs() > 0:
             break
 
-    ab = sum(ms.mat[n_r][n_c].is_bomb() for n_r, n_c in ms._neighbors(r, c))
+    ab = sum(ms.mat[n_r][n_c].is_bomb() for n_r, n_c in Minesweeper._neighbors(r, c))
     assert ab == ms.mat[r][c].adjacent_bombs()
 
     visible = 0
@@ -93,10 +93,10 @@ def test_ms_init_adjacent():
 
 def test_ms_neighbors():
     ms = Minesweeper(5,5)
-    assert {x for x in ms._neighbors(0,0)} == {(0,1), (1,0), (1,1)}
-    assert {x for x in ms._neighbors(4,0)} == {(3,0),(5,0),(3,1),(5,1),(4,1)}
-    assert {x for x in ms._neighbors(15,15)} == {(15,14),(14,15),(14,14)}
-    assert {x for x in ms._neighbors(5,5)} == {(4,4),(5,4),(6,4),(4,5),(6,5),(4,6),(5,6),(6,6)}
+    assert {x for x in Minesweeper._neighbors(0,0)} == {(0,1), (1,0), (1,1)}
+    assert {x for x in Minesweeper._neighbors(4,0)} == {(3,0),(5,0),(3,1),(5,1),(4,1)}
+    assert {x for x in Minesweeper._neighbors(15,15)} == {(15,14),(14,15),(14,14)}
+    assert {x for x in Minesweeper._neighbors(5,5)} == {(4,4),(5,4),(6,4),(4,5),(6,5),(4,6),(5,6),(6,6)}
 
 def test_ms_adjacent_numbers():
     ms = Minesweeper(5,5)
@@ -104,5 +104,5 @@ def test_ms_adjacent_numbers():
         for j in range(16):
             ab = ms.mat[i][j].adjacent_bombs()
             if ab != -1:
-                assert ab == sum(1 for a,b in ms._neighbors(i,j) if ms.mat[a][b].is_bomb())
+                assert ab == sum(1 for a,b in Minesweeper._neighbors(i,j) if ms.mat[a][b].is_bomb())
 

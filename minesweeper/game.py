@@ -182,7 +182,8 @@ class Minesweeper:
         """
         return self.state == Minesweeper.WON
 
-    def _neighbors(self, r: int, c: int) -> Iterator[Tuple[int, int]]:
+    @staticmethod
+    def _neighbors(r: int, c: int) -> Iterator[Tuple[int, int]]:
         """Generate all adjacent positions of (r,c).
 
         Args:
@@ -213,7 +214,7 @@ class Minesweeper:
                 continue
             cnt += 1
             self.mat[_r][_c].make_bomb()
-            for n_r, n_c in self._neighbors(_r, _c):
+            for n_r, n_c in Minesweeper._neighbors(_r, _c):
                 if not self.mat[n_r][n_c].is_bomb():
                     self.mat[n_r][n_c].increment_adjacency_count()
 
@@ -228,7 +229,7 @@ class Minesweeper:
         stack = [(r, c)]
         while stack:
             c_r, c_c = stack.pop()
-            for n_r, n_c in self._neighbors(c_r, c_c):
+            for n_r, n_c in Minesweeper._neighbors(c_r, c_c):
                 if not self.mat[n_r][n_c].is_visible():
                     if self.mat[n_r][n_c].adjacent_bombs() >= 0:
                         self.mat[n_r][n_c].flip()
