@@ -90,3 +90,19 @@ def test_ms_init_adjacent():
             if ms.mat[_r][_c].is_visible():
                 visible += 1
     assert visible == 1
+
+def test_ms_neighbors():
+    ms = Minesweeper(5,5)
+    assert {x for x in ms._neighbors(0,0)} == {(0,1), (1,0), (1,1)}
+    assert {x for x in ms._neighbors(4,0)} == {(3,0),(5,0),(3,1),(5,1),(4,1)}
+    assert {x for x in ms._neighbors(15,15)} == {(15,14),(14,15),(14,14)}
+    assert {x for x in ms._neighbors(5,5)} == {(4,4),(5,4),(6,4),(4,5),(6,5),(4,6),(5,6),(6,6)}
+
+def test_ms_adjacent_numbers():
+    ms = Minesweeper(5,5)
+    for i in range(16):
+        for j in range(16):
+            ab = ms.mat[i][j].adjacent_bombs()
+            if ab != -1:
+                assert ab == sum(1 for a,b in ms._neighbors(i,j) if ms.mat[a][b].is_bomb())
+

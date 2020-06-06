@@ -1,5 +1,10 @@
 {
-    "python.pythonPath": "C:\\Users\\jonst\\.virtualenvs\\minesweeper-eJjnRpSV\\Scripts\\python.exe",
+    "python.pythonPath": "C:/Users/jonst/.virtualenvs/minesweeper-eJjnRpSV/Scripts/python.exe",
+
     "python.autoComplete.extraPaths": [
-    ]
+      "${workspaceFolder}/minesweeper"
+    ],
+
+    "python.linting.pylintPath": "C:/Users/jonst/.virtualenvs/minesweeper-eJjnRpSV/Scripts/pylint.exe",
+    "python.linting.pylintEnabled": true
 }

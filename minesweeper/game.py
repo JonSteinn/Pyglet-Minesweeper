@@ -188,7 +188,7 @@ class Minesweeper:
         Yields:
             (int,int): The row-col coordinate of a neighbor.
         """
-        for _r, _c in ((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)):
+        for _r, _c in ((-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)):
             if 0 <= r + _r < Minesweeper.ROW_SIZE and \
                 0 <= c + _c < Minesweeper.COL_SIZE:
                 yield r+_r, c+_c

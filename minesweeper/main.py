@@ -1,9 +1,9 @@
 """The main file that contains the pyglet.
 """
 
+import pyglet
 from shapes import Rectangle, AlphaColors
 from game import Minesweeper
-import pyglet
 
 class Application(pyglet.window.Window):
     RECT_LEN = 40
@@ -18,6 +18,8 @@ class Application(pyglet.window.Window):
     HEIGHT = Minesweeper.ROW_SIZE * RECT_LEN + TOP_SIZE
 
     def __init__(self, *args, **kargs):
+        """Create an application instance.
+        """
         super().__init__(Application.WIDTH, Application.HEIGHT, *args, **kargs)
         self.game = None
         self.rects = [
@@ -71,7 +73,15 @@ class Application(pyglet.window.Window):
             self.label.text = str(self.game.bombs_rem)
             self.label.draw()
 
-    def on_mouse_press(self, x, y, button, modifiers):
+    def on_mouse_press(self, x: int, y: int, button: int, _: int) -> None:
+        """Event handler for mouse clicks.
+
+        Args:
+            x (int): X coordinate of mouse click.
+            y (int): Y coordinate of mouse click
+            button (int): What mouse button was pressed.
+            _ (int): Modifiers. Unused.
+        """
         _x, _y = x//Application.RECT_LEN, y//Application.RECT_LEN
         if _x < Minesweeper.ROW_SIZE and _y < Minesweeper.COL_SIZE:
             if self.game is None:
@@ -84,7 +94,7 @@ class Application(pyglet.window.Window):
         else:
             self.game = None
 
-def main():
+def main() -> None:
     """Starting point.
     """
     app = Application("Minesweeper", resizable=False)
